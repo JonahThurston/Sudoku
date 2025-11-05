@@ -347,14 +347,14 @@ def order_values(puzzle, row, column):
   domain = puzzle.cells[row][column].domain[:]
 
   # TASK 5 CODE HERE
-  ordering = []
+  removalsValuePairs = []
   for value in domain:
     removals = puzzle.forward_check(row, column, value, mode='count')
-    ordering.append((removals, value))
+    removalsValuePairs.append((removals, value))
 
   # Return values ordered by fewest removals then value
   orderedValues = []
-  for _, value in sorted(ordering):
+  for _, value in sorted(removalsValuePairs):
       orderedValues.append(value)
   return orderedValues
 
