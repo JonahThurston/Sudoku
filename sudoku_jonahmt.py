@@ -319,9 +319,15 @@ def select_variable(puzzle):
 
   # 0. Get the initial list of all unassigned variables
   unassigned = get_unassigned_variables(puzzle)
+
+  # Try without MRV or degree heuristics
+  # return unassigned[0]
   
   # 1. Use MRV heuristic to get list of variables with the min remaining values
   minimum_remaining_values = mrv(puzzle, unassigned)  
+
+  # Try MRV without degree heuristic
+  # return minimum_remaining_values[0][0], minimum_remaining_values[0][1]
 
   # If MRV identifies a unique variable, then return it
   if len(minimum_remaining_values) == 1:
@@ -385,6 +391,9 @@ def backtracking_search(puzzle):
   # 3. Select an ordering over the values (use order_values(r,c) where r, c are the row
   #  and column of the selected variable.  It returns a list of values
   orderedValues = order_values(puzzle, selectedRow, selectedColumn)
+
+  # OR Try it without least constraint heuristic
+  # orderedValues = puzzle.cells[selectedRow][selectedColumn].domain[:]
 
   # 4. For each value in the ordered list:
   for value in orderedValues:
