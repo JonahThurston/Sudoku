@@ -168,13 +168,43 @@ class Sudoku():
     of how many values forward checking would remove
     '''
 
-    # TASK 2 Code here
+    affectedCells = set()
+    # cells in same column
+    for c in range(9):
+      if c != column:
+        affectedCells.add((row, c))
+    
+    # cells in same row
+    for r in range(9):
+      if r != row:
+        affectedCells.add((r, column))
 
-    #Modify these return values!!
+    #cells in same grid
+    base_r = (row // 3) * 3
+    base_c = (column // 3) * 3
+    for r in range(base_r, base_r + 3):
+      for c in range(base_c, base_c + 3):
+        if r == row and c == column:
+          continue
+        affectedCells.add((r, c))
+
     if mode == 'remove':
+      for r, c in affectedCells:
+        cell = self.cells[r][c]
+        domainStillValid = cell.remove_value(value)
+        if not domainStillValid:
+          return False
+          
       return True
-    elif mode == 'count': 
-      return 0
+    
+    elif mode == 'count':
+      removals = 0
+      for r, c in affectedCells:
+        cell = self.cells[r][c]
+        if value in cell.domain:
+          removals += 1
+          
+      return removals
 
   def get_row_column(self, grid, cell):
     '''
