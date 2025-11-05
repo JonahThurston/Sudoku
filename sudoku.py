@@ -244,8 +244,21 @@ def mrv(puzzle, unassigned):
   [unassigned] is a list of (row, column) tuples corresponding to cell locations
   '''
 
-  # Change this.  Return your list of minimum remaining value locations
-  return unassigned
+  minDomain = None
+  mrvCells = []
+
+  for row, column in unassigned:
+    cell = puzzle.cells[row][column]
+    domainSize = len(cell.domain)
+
+    #chat generated this code and i love it. If we come across a lower domain, just overwrite the whole list ezpz
+    if minDomain is None or domainSize < minDomain:
+      minDomain = domainSize
+      mrvCells = [(row, column)]
+    elif domainSize == minDomain:
+      mrvCells.append((row, column))
+
+  return mrvCells
 
 def max_degree(puzzle, tied):
   '''
