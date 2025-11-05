@@ -347,9 +347,17 @@ def order_values(puzzle, row, column):
   domain = puzzle.cells[row][column].domain[:]
 
   # TASK 5 CODE HERE
-  
-  #Change this to return an ordered list
-  return domain
+  ordering = []
+  for value in domain:
+    removals = puzzle.forward_check(row, column, value, mode='count')
+    ordering.append((removals, value))
+
+  # Return values ordered by fewest removals then value
+  orderedValues = []
+  for _, value in sorted(ordering):
+      orderedValues.append(value)
+  return orderedValues
+
 
 def backtracking_search(puzzle):
   '''
