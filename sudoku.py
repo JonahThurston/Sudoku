@@ -375,38 +375,54 @@ def backtracking_search(puzzle):
 
   # 1. Base case, is input [puzzle] solved? If so, return the puzzle. Use is_solved() function
   #  to see if the puzzle is solved.
+  if puzzle.is_solved():
+    return puzzle
 
   # 2. Select a variable to assign next ( use select_variable() function, which returns 
   #  row and column of the variable 
+  selectedRow, selectedColumn = select_variable(puzzle)
 
   # 3. Select an ordering over the values (use order_values(r,c) where r, c are the row
   #  and column of the selected variable.  It returns a list of values
+  orderedValues = order_values(puzzle, selectedRow, selectedColumn)
 
   # 4. For each value in the ordered list:
+  for value in orderedValues:
 
     # 4.1 Get a copy of the puzzle to modify
     #   4.1.a Create new puzzle
+    newPuzzle = Sudoku()
     
     #   4.1.b Set it to be equal to the current puzzle (use copy_puzzle())
+    newPuzzle.copy_puzzle(puzzle)
 
     # 4.2 Assign current value to selected variable (use assign_value())
+    newPuzzle.cells[selectedRow][selectedColumn].assign_value(value)
 
     # 4.3 Forward check from this assignment (use forward_check(), in 'remove' mode)
     #   which will return False if this assignment is invalid (empty domain was found)
     #   or True if it is valid. 
+    passedCheck = newPuzzle.forward_check(selectedRow, selectedColumn, value, mode='remove')
 
     # 4.4 If forward checking detects a problem, then continue to the next value
+    if not passedCheck:
+      continue
 
     # 4.5 If forward checking doesn't detect problem, then recurse on the 
     #   modified puzzle (call backtracking_search())
+    result = backtracking_search(newPuzzle)
 
     # 4.6 If the search succeeds (return value of backtracking is not None)
     #   return solved puzzle! (this is what backtracking_search should return)
+    if result is not None:
+      return result
 
     # 4.7 If search is a failure, continue with next value for this variable
+    continue
 
   # 5. If all values for the chosen variable failed, return failure (None)
   # return None
+  return None
   
 if __name__ == "__main__":
 
