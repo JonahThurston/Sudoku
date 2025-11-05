@@ -168,6 +168,27 @@ class Sudoku():
     of how many values forward checking would remove
     '''
 
+    affectedCells = self.getAffectedCells(row, column)
+
+    if mode == 'remove':
+      for r, c in affectedCells:
+        cell = self.cells[r][c]
+        domainStillValid = cell.remove_value(value)
+        if not domainStillValid:
+          return False
+          
+      return True
+    
+    elif mode == 'count':
+      removals = 0
+      for r, c in affectedCells:
+        cell = self.cells[r][c]
+        if value in cell.domain:
+          removals += 1
+
+      return removals
+
+  def getAffectedCells(self, row, column):
     affectedCells = set()
     # cells in same column
     for c in range(9):
@@ -187,24 +208,8 @@ class Sudoku():
         if r == row and c == column:
           continue
         affectedCells.add((r, c))
-
-    if mode == 'remove':
-      for r, c in affectedCells:
-        cell = self.cells[r][c]
-        domainStillValid = cell.remove_value(value)
-        if not domainStillValid:
-          return False
-          
-      return True
     
-    elif mode == 'count':
-      removals = 0
-      for r, c in affectedCells:
-        cell = self.cells[r][c]
-        if value in cell.domain:
-          removals += 1
-          
-      return removals
+    return affectedCells
 
   def get_row_column(self, grid, cell):
     '''
@@ -269,10 +274,14 @@ def count_constraints(puzzle, row, column):
   This is called by the max_degree function
   '''
 
-  # TASK 3 CODE HERE
-  
-  #MODIFY THIS
-  # return 0
+  affectedCells = puzzle.getAffectedCells(row, column)
+
+  count = 0
+  for r, c in affectedCells:
+    cell = puzzle.cells[r][c]
+    if cell.value is None:
+      count += 1
+  return count
 
 def get_unassigned_variables(puzzle):
   '''
